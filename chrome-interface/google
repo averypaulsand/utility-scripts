@@ -1,0 +1,44 @@
+#!/bin/bash
+
+google_search_helper(){
+URL="https://"
+OPEN="/Applications/Google\ Chrome.app/"
+if [ "$1" = "$2" ]; then
+   URL+="$1.com"
+   OPEN $URL
+else
+   return
+fi
+}
+
+check_frequent_sites(){
+sites=(
+   bandcamp
+   youtube
+   reddit
+)
+for i in "${sites[@]}"; do
+if google_search_helper "$1" "$i" ; then
+   return 0
+fi
+done
+return 1
+}
+
+google() {
+URL="https://www.google.com/search?q="
+OPEN="/Applications/Google\ Chrome.app/"
+# check frequent sites
+if check_frequent_sites "$1" ; then
+   return 0
+elif [ "$1" = "new" ]; then
+   OPEN "https://www.google.com"
+elif [[ "$1" == *"."* ]]; then
+   OPEN "https://$1"
+else
+for var in "$@"
+do
+   URL+="$var+"
+done
+  OPEN $URL
+fi }
